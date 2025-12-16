@@ -216,7 +216,7 @@ export default function Submit() {
               <Label htmlFor="studentNumber" className="text-white font-medium text-sm">
                 Student Number{" "}
                 <span className="text-white/60 text-xs font-normal">
-                  (required for current students and visitors can leave blank)
+                  (required for current students and visitors can leave it blank)
                 </span>
               </Label>
               <Input
