@@ -1,3 +1,4 @@
+js
 import { useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import { ChevronLeft, Home, CheckCircle } from "lucide-react";
