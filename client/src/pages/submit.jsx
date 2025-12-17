@@ -1,5 +1,4 @@
-js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
 import { ChevronLeft, Home, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,6 +33,8 @@ import {
   generateQueueNumber,
   assignWindow
 } from "@/lib/transactionData";
+import { getKioskStatus } from "@/lib/queueStorage";
+import { saveQueueEntry } from "@/lib/queueStorage";
 
 export default function Submit() {
   const [, setLocation] = useLocation();
@@ -50,6 +51,17 @@ export default function Submit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [queueData, setQueueData] = useState(null);
+  const [kioskAvailable, setKioskAvailable] = useState(true);
+
+  useEffect(() => {
+    // Check kiosk status on mount and periodically
+    const checkKioskStatus = () => {
+      setKioskAvailable(getKioskStatus());
+    };
+    checkKioskStatus();
+    const interval = setInterval(checkKioskStatus, 2000); // Check every 2 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   const transaction = selectedTransaction ? getTransactionById(selectedTransaction) : null;
   const category = selectedTransaction ? getCategoryByTransactionId(selectedTransaction) : null;
@@ -72,6 +84,10 @@ export default function Submit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!kioskAvailable) {
+      alert("The registrar is not accepting queue entries at this time. Please try again later.");
+      return;
+    }
     if (!fullName.trim() || !selectedTransaction) return;
 
     // If the user selects a current student year level, require student number.
@@ -102,8 +118,14 @@ export default function Submit() {
         transactionName: transactionInfo.name,
         category: categoryInfo.name,
         fullName: fullName.trim(),
+        studentNumber: studentNumber.trim() || null,
+        yearLevel: yearLevel || null,
+        email: email.trim() || null,
+        phone: phone.trim() || null,
         timestamp: new Date()
       };
+      // Save to queue storage for admin panel
+      saveQueueEntry(data);
       setQueueData(data);
       setShowSuccess(true);
     }
@@ -190,6 +212,21 @@ export default function Submit() {
       </div>
 
       <div className="flex-1 px-4 py-6 overflow-y-auto">
+        {!kioskAvailable && (
+          <div className="max-w-md mx-auto mb-4 p-4 bg-red-500/90 text-white rounded-lg border-2 border-red-600 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">Kiosk Temporarily Closed</h3>
+                <p className="text-sm mt-1">The registrar is not accepting queue entries at this time. Please try again later.</p>
+              </div>
+            </div>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-5 max-w-md mx-auto">
           <div className="bg-white/10 rounded-lg p-4 space-y-4">
             <h3 className="text-white font-semibold text-sm uppercase tracking-wide">
@@ -338,11 +375,11 @@ export default function Submit() {
           <div className="pt-2">
             <Button
               type="submit"
-              disabled={!fullName.trim() || !selectedTransaction || isSubmitting}
+              disabled={!kioskAvailable || !fullName.trim() || !selectedTransaction || isSubmitting}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded-lg font-semibold text-base disabled:opacity-50"
               data-testid="button-submit"
             >
-              {isSubmitting ? "Processing..." : "SUBMIT"}
+              {isSubmitting ? "Processing..." : kioskAvailable ? "SUBMIT" : "Kiosk Closed"}
             </Button>
           </div>
         </form>

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, Search, Menu, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { transactionCategories } from "@/lib/transactionData";
+import { getKioskStatus } from "@/lib/queueStorage";
 import {
   Accordion,
   AccordionContent,
@@ -22,6 +23,16 @@ export default function Transactions() {
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState([]);
+  const [kioskAvailable, setKioskAvailable] = useState(true);
+
+  useEffect(() => {
+    const checkKioskStatus = () => {
+      setKioskAvailable(getKioskStatus());
+    };
+    checkKioskStatus();
+    const interval = setInterval(checkKioskStatus, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredCategories = transactionCategories.map(category => ({
     ...category,
@@ -33,6 +44,10 @@ export default function Transactions() {
   );
 
   const handleTransactionSelect = (transaction) => {
+    if (!kioskAvailable) {
+      alert("The registrar is not accepting queue entries at this time. Please try again later.");
+      return;
+    }
     setLocation(`/submit?transactionId=${transaction.id}`);
   };
 
@@ -90,6 +105,21 @@ export default function Transactions() {
 
       <div className="flex-1 px-4 py-4 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
+          {!kioskAvailable && (
+            <div className="mb-4 p-4 bg-red-500/90 text-white rounded-lg border-2 border-red-600 shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Kiosk Temporarily Closed</h3>
+                  <p className="text-sm mt-1">The registrar is not accepting queue entries at this time. Please try again later.</p>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input

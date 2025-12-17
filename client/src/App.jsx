@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import Transactions from "@/pages/transactions";
 import Submit from "@/pages/submit";
 import Ticket from "@/pages/ticket";
+import Admin from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/transactions" component={Transactions} />
       <Route path="/submit" component={Submit} />
       <Route path="/ticket" component={Ticket} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );
