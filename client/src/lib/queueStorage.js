@@ -49,7 +49,10 @@ export function updateQueueStatus(queueId, status) {
 // Get pending queue entries
 export function getPendingQueue() {
   const entries = getAllQueueEntries();
-  return entries.filter((e) => e.status === "pending").sort((a, b) => {
+  // Show both pending and called entries in the admin queue list
+  // so that a ticket remains visible after being called and can
+  // later be marked as served.
+  return entries.filter((e) => e.status === "pending" || e.status === "called").sort((a, b) => {
     const numA = parseInt(a.queueNumber) || 0;
     const numB = parseInt(b.queueNumber) || 0;
     return numA - numB;
@@ -60,7 +63,8 @@ export function getPendingQueue() {
 export function getQueueByWindow(window) {
   const entries = getAllQueueEntries();
   return entries
-    .filter((e) => e.window === window && e.status === "pending")
+    // Include both pending and called entries for the selected window
+    .filter((e) => e.window === window && (e.status === "pending" || e.status === "called"))
     .sort((a, b) => {
       const numA = parseInt(a.queueNumber) || 0;
       const numB = parseInt(b.queueNumber) || 0;

@@ -285,49 +285,65 @@ export default function Admin() {
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {filteredQueue.map((entry) => (
-                    <div
-                      key={entry.id}
-                      className="flex items-center justify-between p-4 border rounded-lg bg-white"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="text-3xl font-bold text-blue-800">
-                          {entry.queueNumber}
-                        </div>
-                        <div>
-                          <p className="font-semibold">{entry.fullName}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {entry.transactionName}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Window {entry.window} • {entry.category}
-                          </p>
-                          {entry.studentNumber && (
-                            <p className="text-xs text-muted-foreground">
-                              Student #: {entry.studentNumber}
+                  {filteredQueue.map((entry) => {
+                    const isCalled = entry.status === "called";
+                    return (
+                      <div
+                        key={entry.id}
+                        className={`flex items-center justify-between p-4 border rounded-lg bg-white ${
+                          isCalled ? "border-blue-500 bg-blue-50" : ""
+                        }`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="text-3xl font-bold text-blue-800">
+                            {entry.queueNumber}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-semibold">{entry.fullName}</p>
+                              {isCalled && (
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">
+                                  Called
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {entry.transactionName}
                             </p>
-                          )}
+                            <p className="text-xs text-muted-foreground">
+                              Window {entry.window} • {entry.category}
+                            </p>
+                            {entry.studentNumber && (
+                              <p className="text-xs text-muted-foreground">
+                                Student #: {entry.studentNumber}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => !isCalled && handleCallNext(entry.id)}
+                            className={`bg-blue-600 hover:bg-blue-700 ${
+                              isCalled ? "opacity-60 cursor-default" : ""
+                            }`}
+                            disabled={isCalled}
+                            title={isCalled ? "This number has already been called" : "Call this number"}
+                          >
+                            <Bell className="h-4 w-4 mr-2" />
+                            {isCalled ? "Called" : "Call"}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => handleMarkServed(entry.id)}
+                            className="border-green-600 text-green-600 hover:bg-green-50"
+                          >
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Served
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() => handleCallNext(entry.id)}
-                          className="bg-blue-600 hover:bg-blue-700"
-                        >
-                          <Bell className="h-4 w-4 mr-2" />
-                          Call
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => handleMarkServed(entry.id)}
-                          className="border-green-600 text-green-600 hover:bg-green-50"
-                        >
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Served
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
