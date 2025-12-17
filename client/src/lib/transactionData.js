@@ -96,6 +96,7 @@ export function getCategoryByTransactionId(id) {
 }
 
 export function generateQueueNumber() {
+<<<<<<< HEAD
   // Simple ascending counter stored locally so users see fast-food-style numbers.
   // Falls back to "0001" if storage is unavailable.
   try {
@@ -108,6 +109,10 @@ export function generateQueueNumber() {
     // If localStorage is blocked, just return a safe default.
     return "0001";
   }
+=======
+  const num = Math.floor(Math.random() * 9000) + 1000;
+  return num.toString().padStart(4, '0');
+>>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
 }
 
 export function assignWindow(category) {
