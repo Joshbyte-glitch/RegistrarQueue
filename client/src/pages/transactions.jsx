@@ -1,17 +1,10 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
-import { useState } from "react";
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, Search, Menu, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { transactionCategories } from "@/lib/transactionData";
-<<<<<<< HEAD
 import { getKioskStatus } from "@/lib/queueStorage";
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
 import {
   Accordion,
   AccordionContent,
@@ -30,7 +23,6 @@ export default function Transactions() {
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState([]);
-<<<<<<< HEAD
   const [kioskAvailable, setKioskAvailable] = useState(true);
 
   useEffect(() => {
@@ -41,8 +33,6 @@ export default function Transactions() {
     const interval = setInterval(checkKioskStatus, 2000);
     return () => clearInterval(interval);
   }, []);
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
 
   const filteredCategories = transactionCategories.map(category => ({
     ...category,
@@ -54,13 +44,10 @@ export default function Transactions() {
   );
 
   const handleTransactionSelect = (transaction) => {
-<<<<<<< HEAD
     if (!kioskAvailable) {
       alert("The registrar is not accepting queue entries at this time. Please try again later.");
       return;
     }
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
     setLocation(`/submit?transactionId=${transaction.id}`);
   };
 
@@ -118,7 +105,6 @@ export default function Transactions() {
 
       <div className="flex-1 px-4 py-4 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
-<<<<<<< HEAD
           {!kioskAvailable && (
             <div className="mb-4 p-4 bg-red-500/90 text-white rounded-lg border-2 border-red-600 shadow-lg">
               <div className="flex items-center gap-3">
@@ -134,8 +120,6 @@ export default function Transactions() {
               </div>
             </div>
           )}
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input

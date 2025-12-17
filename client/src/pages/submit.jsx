@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
-import { useState } from "react";
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
 import { useLocation, useSearch } from "wouter";
 import { ChevronLeft, Home, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -37,11 +33,7 @@ import {
   generateQueueNumber,
   assignWindow
 } from "@/lib/transactionData";
-<<<<<<< HEAD
-import { getKioskStatus } from "@/lib/queueStorage";
-import { saveQueueEntry } from "@/lib/queueStorage";
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
+import { getKioskStatus, saveQueueEntry } from "@/lib/queueStorage";
 
 export default function Submit() {
   const [, setLocation] = useLocation();
@@ -58,7 +50,6 @@ export default function Submit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [queueData, setQueueData] = useState(null);
-<<<<<<< HEAD
   const [kioskAvailable, setKioskAvailable] = useState(true);
 
   useEffect(() => {
@@ -70,8 +61,6 @@ export default function Submit() {
     const interval = setInterval(checkKioskStatus, 2000); // Check every 2 seconds
     return () => clearInterval(interval);
   }, []);
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
 
   const transaction = selectedTransaction ? getTransactionById(selectedTransaction) : null;
   const category = selectedTransaction ? getCategoryByTransactionId(selectedTransaction) : null;
@@ -80,7 +69,6 @@ export default function Submit() {
     let filled = 0;
     if (fullName.trim()) filled++;
     if (selectedTransaction) filled++;
-<<<<<<< HEAD
     if (yearLevel) filled++;
     // Student number only counted for current students, not alumni/visitors
     const isCurrentStudent =
@@ -91,14 +79,10 @@ export default function Submit() {
       yearLevel === "graduate";
     if (isCurrentStudent && studentNumber.trim()) filled++;
     return Math.round((filled / 4) * 100);
-=======
-    return Math.round((filled / 2) * 100);
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     if (!kioskAvailable) {
       alert("The registrar is not accepting queue entries at this time. Please try again later.");
       return;
@@ -114,15 +98,10 @@ export default function Submit() {
       yearLevel === "graduate";
     if (isCurrentStudent && !studentNumber.trim()) {
       alert(
-        "Please enter your student number, or choose 'Alumni' or 'Visitor (no student number yet)' as Year Level."
+        "Please enter your student number, or choose 'Alumni' or 'Visitor' as Year Level."
       );
       return;
     }
-
-=======
-    if (!fullName.trim() || !selectedTransaction) return;
-
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
     setIsSubmitting(true);
     
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -137,7 +116,6 @@ export default function Submit() {
         transactionName: transactionInfo.name,
         category: categoryInfo.name,
         fullName: fullName.trim(),
-<<<<<<< HEAD
         studentNumber: studentNumber.trim() || null,
         yearLevel: yearLevel || null,
         email: email.trim() || null,
@@ -146,10 +124,6 @@ export default function Submit() {
       };
       // Save to queue storage for admin panel
       saveQueueEntry(data);
-=======
-        timestamp: new Date()
-      };
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
       setQueueData(data);
       setShowSuccess(true);
     }
@@ -236,7 +210,6 @@ export default function Submit() {
       </div>
 
       <div className="flex-1 px-4 py-6 overflow-y-auto">
-<<<<<<< HEAD
         {!kioskAvailable && (
           <div className="max-w-md mx-auto mb-4 p-4 bg-red-500/90 text-white rounded-lg border-2 border-red-600 shadow-lg">
             <div className="flex items-center gap-3">
@@ -256,12 +229,6 @@ export default function Submit() {
           <div className="bg-white/10 rounded-lg p-4 space-y-4">
             <h3 className="text-white font-semibold text-sm uppercase tracking-wide">
               Student / Visitor Information
-=======
-        <form onSubmit={handleSubmit} className="space-y-5 max-w-md mx-auto">
-          <div className="bg-white/10 rounded-lg p-4 space-y-4">
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wide">
-              Student Information
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
             </h3>
             
             <div className="space-y-2">
@@ -282,23 +249,15 @@ export default function Submit() {
 
             <div className="space-y-2">
               <Label htmlFor="studentNumber" className="text-white font-medium text-sm">
-<<<<<<< HEAD
                 Student Number{" "}
                 <span className="text-white/60 text-xs font-normal">
-                  (required for current students and visitors can leave it blank)
+                  (required for current students, alumni and visitors can leave blank)
                 </span>
-=======
-                Student Number
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
               </Label>
               <Input
                 id="studentNumber"
                 type="text"
-<<<<<<< HEAD
-                placeholder="e.g., 22-2222 (leave blank only if visitor) "
-=======
-                placeholder="e.g., 2021-00001"
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
+                placeholder="e.g., 2021-00001 or leave blank if none"
                 value={studentNumber}
                 onChange={(e) => setStudentNumber(e.target.value)}
                 className="bg-white/95 border-0 rounded-lg h-11"
@@ -322,14 +281,9 @@ export default function Submit() {
                   <SelectItem value="2nd-year">2nd Year</SelectItem>
                   <SelectItem value="3rd-year">3rd Year</SelectItem>
                   <SelectItem value="4th-year">4th Year</SelectItem>
-<<<<<<< HEAD
-                  <SelectItem value="alumni">Alumni</SelectItem>
-                  <SelectItem value="visitor">Visitor</SelectItem>
-=======
-                  <SelectItem value="5th-year">5th Year</SelectItem>
                   <SelectItem value="graduate">Graduate</SelectItem>
                   <SelectItem value="alumni">Alumni</SelectItem>
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
+                  <SelectItem value="visitor">Visitor</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -337,11 +291,7 @@ export default function Submit() {
 
           <div className="bg-white/10 rounded-lg p-4 space-y-4">
             <h3 className="text-white font-semibold text-sm uppercase tracking-wide">
-<<<<<<< HEAD
-              Contact Details 
-=======
               Contact Details
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
             </h3>
 
             <div className="space-y-2">
@@ -424,19 +374,11 @@ export default function Submit() {
           <div className="pt-2">
             <Button
               type="submit"
-<<<<<<< HEAD
               disabled={!kioskAvailable || !fullName.trim() || !selectedTransaction || isSubmitting}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded-lg font-semibold text-base disabled:opacity-50"
               data-testid="button-submit"
             >
               {isSubmitting ? "Processing..." : kioskAvailable ? "SUBMIT" : "Kiosk Closed"}
-=======
-              disabled={!fullName.trim() || !selectedTransaction || isSubmitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded-lg font-semibold text-base disabled:opacity-50"
-              data-testid="button-submit"
-            >
-              {isSubmitting ? "Processing..." : "SUBMIT"}
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
             </Button>
           </div>
         </form>

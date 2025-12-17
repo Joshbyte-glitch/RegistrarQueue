@@ -7,10 +7,7 @@ import Home from "@/pages/home";
 import Transactions from "@/pages/transactions";
 import Submit from "@/pages/submit";
 import Ticket from "@/pages/ticket";
-<<<<<<< HEAD
 import Admin from "@/pages/admin";
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,10 +17,7 @@ function Router() {
       <Route path="/transactions" component={Transactions} />
       <Route path="/submit" component={Submit} />
       <Route path="/ticket" component={Ticket} />
-<<<<<<< HEAD
       <Route path="/admin" component={Admin} />
-=======
->>>>>>> 4be2deb93f067ef9f6bd5ec65df9118893a4f06c
       <Route component={NotFound} />
     </Switch>
   );
