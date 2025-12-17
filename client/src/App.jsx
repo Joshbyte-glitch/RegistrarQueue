@@ -1,4 +1,5 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
+import { useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -11,6 +12,28 @@ import Admin from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    // Default title
+    let title = "Registrar's office";
+
+    // Page-specific titles
+    if (location.startsWith("/admin")) {
+      title = "Registrar Admin";
+    } else if (location.startsWith("/transactions")) {
+      title = "Transactions - Registrar's office";
+    } else if (location === "/submit") {
+      title = "Submit - Registrar's office";
+    } else if (location === "/ticket") {
+      title = "Ticket - Registrar's office";
+    } else if (location === "/") {
+      title = "Registrar's office";
+    }
+
+    document.title = title;
+  }, [location]);
+
   return (
     <Switch>
       <Route path="/" component={Home} />
